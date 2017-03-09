@@ -1,6 +1,7 @@
 package com.atomist.rug.test.gherkin
 
 import com.atomist.project.archive.{DefaultAtomistConfig, Rugs}
+import com.atomist.rug.test.gherkin.handler.HandlerFeature
 import com.atomist.rug.test.gherkin.project.ProjectManipulationFeature
 import com.atomist.source.ArtifactSource
 
@@ -20,6 +21,8 @@ object DefaultExecutableFeatureFactory extends ExecutableFeatureFactory {
                                     listeners: Seq[GherkinExecutionListener]): AbstractExecutableFeature[_,_] = {
     if (f.definition.path.contains("project"))
       new ProjectManipulationFeature(f, definitions, rugAs, rugs, listeners)
+    else if (f.definition.path.contains("handler"))
+      new HandlerFeature(f, definitions, rugAs, rugs, listeners)
     else {
       throw new IllegalArgumentException(s"Cannot handle path [${f.definition.path}]: Paths must be of form [${atomistConfig.testsDirectory}/project] or ${atomistConfig.testsDirectory}/handlers]")
     }
