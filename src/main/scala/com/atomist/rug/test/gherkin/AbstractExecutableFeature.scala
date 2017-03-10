@@ -1,6 +1,7 @@
 package com.atomist.rug.test.gherkin
 
 import com.atomist.graph.GraphNode
+import com.atomist.project.archive.Rugs
 import com.atomist.project.common.InvalidParametersException
 import com.atomist.rug.runtime.js.interop.{NashornUtils, jsSafeCommittingProxy}
 import com.typesafe.scalalogging.LazyLogging
@@ -15,6 +16,7 @@ import scala.collection.JavaConverters._
 abstract class AbstractExecutableFeature[T <: Object, W <: ScenarioWorld](
                                           val definition: FeatureDefinition,
                                           val definitions: Definitions,
+                                          val rugs: Option[Rugs],
                                           listeners: Seq[GherkinExecutionListener] = Nil)
   extends LazyLogging {
 

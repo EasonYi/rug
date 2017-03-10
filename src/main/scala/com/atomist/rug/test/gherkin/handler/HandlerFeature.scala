@@ -12,7 +12,7 @@ class HandlerFeature(
                       rugArchive: ArtifactSource,
                       rugs: Option[Rugs],
                       listeners: Seq[GherkinExecutionListener])
-  extends AbstractExecutableFeature[RugContext,HandlerScenarioWorld](definition, definitions) {
+  extends AbstractExecutableFeature[RugContext,HandlerScenarioWorld](definition, definitions, rugs, listeners) {
 
   private val rugContext: RugContext = new FakeRugContext("TEST_TEAM")
 
