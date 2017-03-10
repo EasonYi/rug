@@ -26,7 +26,6 @@ class GherkinRunnerAgainstHandlersTest extends FlatSpec with Matchers {
         |   let handler = world.commandHandler("ReturnsEmptyPlanCommandHandler")
         |   world.invokeHandler(handler, {})
         |})
-        |Then("excitement ensues", p => true)
       """.stripMargin
     val passingFeature1StepsFile = StringFileArtifact(
       ".atomist/test/handler/PassingFeature1Step.ts",

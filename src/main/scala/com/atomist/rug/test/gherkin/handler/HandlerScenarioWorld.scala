@@ -4,7 +4,7 @@ import com.atomist.project.archive.Rugs
 import com.atomist.rug.RugNotFoundException
 import com.atomist.rug.runtime.{CommandHandler, EventHandler}
 import com.atomist.rug.runtime.js.RugContext
-import com.atomist.rug.spi.Handlers.Plan
+import com.atomist.rug.spi.Handlers.{Message, Plan}
 import com.atomist.rug.test.gherkin.{Definitions, ScenarioWorld}
 
 class HandlerScenarioWorld(definitions: Definitions, rugContext: RugContext, rugs: Option[Rugs] = None)
@@ -43,5 +43,29 @@ class HandlerScenarioWorld(definitions: Definitions, rugContext: RugContext, rug
     planOption = handler.handle(rugContext, parameters(params))
   }
 
+  /**
+    * Return the plan or throw an exception if none was recorded
+    */
+  def plan: jsPlan =
+    planOption.map(new jsPlan(_)).getOrElse(throw new IllegalArgumentException("No plan was recorded"))
+
+
+}
+
+import scala.collection.JavaConverters._
+
+/**
+  * JavaScript-friendly version of Plan structure, without Scala collections and using null instead of Option
+  */
+class jsPlan(plan: Plan) {
+
+  def messages: java.util.List[jsMessage] =
+    plan.messages.map(new jsMessage(_)).asJava
+
+}
+
+class jsMessage(message: Message) {
+
+  def body = message.body
 
 }
