@@ -1,4 +1,4 @@
-package com.atomist.rug.test.gherkin.handler
+package com.atomist.rug.test.gherkin.handler.command
 
 import com.atomist.project.archive.{AtomistConfig, DefaultAtomistConfig, RugArchiveReader}
 import com.atomist.rug.TestUtils._
@@ -8,13 +8,13 @@ import com.atomist.rug.ts.TypeScriptBuilder
 import com.atomist.source.{ArtifactSourceUtils, SimpleFileBasedArtifactSource, StringFileArtifact}
 import org.scalatest.{FlatSpec, Matchers}
 
-class GherkinRunnerAgainstHandlersTest extends FlatSpec with Matchers {
+class GherkinRunnerCommandHandlerTest extends FlatSpec with Matchers {
 
-  import HandlerTestTargets._
+  import CommandHandlerTestTargets._
 
   val atomistConfig: AtomistConfig = DefaultAtomistConfig
 
-  "handler testing" should "verify no plan steps" in {
+  "command handler testing" should "verify no plan steps" in {
     val passingFeature1Steps =
       """
         |import {Given,When,Then, HandlerScenarioWorld} from "@atomist/rug/test/handler/Core"
@@ -31,12 +31,12 @@ class GherkinRunnerAgainstHandlersTest extends FlatSpec with Matchers {
         |})
       """.stripMargin
     val passingFeature1StepsFile = StringFileArtifact(
-      ".atomist/test/handler/PassingFeature1Step.ts",
+      ".atomist/test/handler/command/PassingFeature1Step.ts",
       passingFeature1Steps
     )
 
     val handlerName = "ReturnsEmptyPlanCommandHandler.ts"
-    val handlerFile = requiredFileInPackage(this, "CommandHandlers.ts").withPath(atomistConfig.handlersRoot + "/" + handlerName)
+    val handlerFile = requiredFileInPackage(this, "CommandHandlers.ts").withPath(atomistConfig.handlersRoot + "/command/" + handlerName)
     val as = SimpleFileBasedArtifactSource(Feature1File, passingFeature1StepsFile, handlerFile)
 
     println(ArtifactSourceUtils.prettyListFiles(as))
@@ -74,7 +74,7 @@ class GherkinRunnerAgainstHandlersTest extends FlatSpec with Matchers {
     )
 
     val handlerName = "ReturnsOneMessageCommandHandler.ts"
-    val handlerFile = requiredFileInPackage(this, "CommandHandlers.ts").withPath(atomistConfig.handlersRoot + "/" + handlerName)
+    val handlerFile = requiredFileInPackage(this, "CommandHandlers.ts").withPath(atomistConfig.handlersRoot + "/command/" + handlerName)
     val as = SimpleFileBasedArtifactSource(Feature1File, passingFeature1StepsFile, handlerFile)
 
     println(ArtifactSourceUtils.prettyListFiles(as))

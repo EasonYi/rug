@@ -1,8 +1,8 @@
-package com.atomist.rug.test.gherkin.handler
+package com.atomist.rug.test.gherkin.handler.command
 
 import com.atomist.source.StringFileArtifact
 
-object HandlerTestTargets {
+object CommandHandlerTestTargets {
 
   val Feature1 =
     """
@@ -18,7 +18,7 @@ object HandlerTestTargets {
     """.stripMargin
 
   val Feature1File = StringFileArtifact(
-    ".atomist/test/handler/Feature1.feature",
+    ".atomist/test/handler/command/Feature1.feature",
     Feature1
   )
 

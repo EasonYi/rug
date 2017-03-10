@@ -5,8 +5,9 @@ import {EventHandler, Tags} from '@atomist/rug/operations/Decorators'
 @EventHandler("ReturnsEmptyPlanEventHandler", "Handles a Build event", new PathExpression<TreeNode,TreeNode>("/build"))
 @Tags("github", "build")
 class ReturnsEmptyPlanEventHandler implements HandleEvent<TreeNode,TreeNode> {
+
   handle(event: Match<TreeNode, TreeNode>){
-    let issue = event.root
+    //let issue = event.root
     return new Plan();
   }
 }
