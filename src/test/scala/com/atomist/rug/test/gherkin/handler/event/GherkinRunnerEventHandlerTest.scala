@@ -14,32 +14,16 @@ class GherkinRunnerEventHandlerTest extends FlatSpec with Matchers {
 
   val atomistConfig: AtomistConfig = DefaultAtomistConfig
 
-  "event handler testing" should "verify no plan steps" in pendingUntilFixed {
-    val passingFeature1Steps =
-      """
-        |import {Given,When,Then, HandlerScenarioWorld} from "@atomist/rug/test/handler/Core"
-        |
-        |Given("a sleepy country", f => {
-        |})
-        |When("a visionary leader enters", (rugContext, world) => {
-        |   world.registerHandler("ReturnsEmptyPlanEventHandler")
-        |   world.sendEvent({})
-        |})
-        |Then("excitement ensues", (p,world) => {
-        |return false
-        |    //return world.plan().messages().length == 0
-        |})
-      """.stripMargin
-    val passingFeature1StepsFile = StringFileArtifact(
-      ".atomist/test/handler/PassingFeature1Step.ts",
-      passingFeature1Steps
+  "event handler testing" should "verify no plan steps" in {
+    val passingFeature1StepsFile = requiredFileInPackage(
+      this,
+      "PassingFeature1Steps.ts",
+      ".atomist/test/handler/PassingFeature1Steps.ts"
     )
 
     val handlerName = "ReturnsEmptyPlanEventHandler.ts"
-    val handlerFile = requiredFileInPackage(this, "EventHandlers.ts").withPath(atomistConfig.handlersRoot + "/event/" + handlerName)
+    val handlerFile = requiredFileInPackage(this, "EventHandlers.ts", atomistConfig.handlersRoot + "/event/" + handlerName)
     val as = SimpleFileBasedArtifactSource(Feature1File, passingFeature1StepsFile, handlerFile)
-
-    println(ArtifactSourceUtils.prettyListFiles(as))
 
     val cas = TypeScriptBuilder.compileWithModel(as)
     val grt = new GherkinRunner(new JavaScriptContext(cas), Some(RugArchiveReader.find(cas)))

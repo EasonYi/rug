@@ -83,12 +83,12 @@ object TestUtils extends Matchers {
     * Return a specific file from the classpath (usually, src/test/resources)
     * in the package of the caller
     */
-  def fileInPackage(caller: AnyRef, name: String): Option[FileArtifact] = {
-    resourcesInPackage(caller).allFiles.find(_.name == name)
+  def fileInPackage(caller: AnyRef, name: String, pathAbove: String = ""): Option[FileArtifact] = {
+    resourcesInPackage(caller).allFiles.find(_.name == name).map(_.withPath(pathAbove + "/" + name))
   }
 
-  def requiredFileInPackage(caller: AnyRef, name: String): FileArtifact =
-    fileInPackage(caller, name).getOrElse(throw new IllegalArgumentException(s"Cannot find file [$name] in [${caller.getClass.getPackage.getName}]"))
+  def requiredFileInPackage(caller: AnyRef, name: String, pathAbove: String = ""): FileArtifact =
+    fileInPackage(caller, name, pathAbove).getOrElse(throw new IllegalArgumentException(s"Cannot find file [$name] in [${caller.getClass.getPackage.getName}]"))
 
   def rugsInSideFile(caller: AnyRef, names: String*): Rugs = {
     val as = rugsInSideFileAsArtifactSource(caller, names:_*)

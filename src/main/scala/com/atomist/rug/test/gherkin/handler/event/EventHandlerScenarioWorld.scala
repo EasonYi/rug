@@ -33,6 +33,7 @@ class EventHandlerScenarioWorld(definitions: Definitions, rugContext: RugContext
   }
 
   def sendEvent(e: Any): Unit = {
+    println(s"Received event [$e]")
     val h = handler.getOrElse(throw new IllegalStateException("No handler is registered"))
     //if (h.rootNodeName == )
   }

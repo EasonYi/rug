@@ -5,7 +5,7 @@ import com.atomist.rug.TestUtils._
 import com.atomist.rug.runtime.js.JavaScriptContext
 import com.atomist.rug.test.gherkin.{GherkinRunner, Passed}
 import com.atomist.rug.ts.TypeScriptBuilder
-import com.atomist.source.{ArtifactSourceUtils, SimpleFileBasedArtifactSource, StringFileArtifact}
+import com.atomist.source.{SimpleFileBasedArtifactSource, StringFileArtifact}
 import org.scalatest.{FlatSpec, Matchers}
 
 class GherkinRunnerCommandHandlerTest extends FlatSpec with Matchers {
@@ -38,8 +38,6 @@ class GherkinRunnerCommandHandlerTest extends FlatSpec with Matchers {
     val handlerName = "ReturnsEmptyPlanCommandHandler.ts"
     val handlerFile = requiredFileInPackage(this, "CommandHandlers.ts").withPath(atomistConfig.handlersRoot + "/command/" + handlerName)
     val as = SimpleFileBasedArtifactSource(Feature1File, passingFeature1StepsFile, handlerFile)
-
-    println(ArtifactSourceUtils.prettyListFiles(as))
 
     val cas = TypeScriptBuilder.compileWithModel(as)
     val grt = new GherkinRunner(new JavaScriptContext(cas), Some(RugArchiveReader.find(cas)))
@@ -76,8 +74,6 @@ class GherkinRunnerCommandHandlerTest extends FlatSpec with Matchers {
     val handlerName = "ReturnsOneMessageCommandHandler.ts"
     val handlerFile = requiredFileInPackage(this, "CommandHandlers.ts").withPath(atomistConfig.handlersRoot + "/command/" + handlerName)
     val as = SimpleFileBasedArtifactSource(Feature1File, passingFeature1StepsFile, handlerFile)
-
-    println(ArtifactSourceUtils.prettyListFiles(as))
 
     val cas = TypeScriptBuilder.compileWithModel(as)
     val grt = new GherkinRunner(new JavaScriptContext(cas), Some(RugArchiveReader.find(cas)))
