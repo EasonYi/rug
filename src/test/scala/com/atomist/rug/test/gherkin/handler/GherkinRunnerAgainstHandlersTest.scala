@@ -24,7 +24,7 @@ class GherkinRunnerAgainstHandlersTest extends FlatSpec with Matchers {
         |})
         |When("a visionary leader enters", (rugContext, world) => {
         |   let handler = world.commandHandler("ReturnsEmptyPlanCommandHandler")
-        |   world.invokeHandler(handler)
+        |   world.invokeHandler(handler, {})
         |})
         |Then("excitement ensues", p => true)
       """.stripMargin
@@ -40,7 +40,7 @@ class GherkinRunnerAgainstHandlersTest extends FlatSpec with Matchers {
     println(ArtifactSourceUtils.prettyListFiles(as))
 
     val cas = TypeScriptBuilder.compileWithModel(as)
-    val grt = new GherkinRunner(new JavaScriptContext(cas), Some(RugArchiveReader.find(as)))
+    val grt = new GherkinRunner(new JavaScriptContext(cas), Some(RugArchiveReader.find(cas)))
     val run = grt.execute()
     //println(new TestReport(run))
     run.result match {

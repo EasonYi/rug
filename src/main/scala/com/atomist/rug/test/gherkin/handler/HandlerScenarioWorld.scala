@@ -4,10 +4,13 @@ import com.atomist.project.archive.Rugs
 import com.atomist.rug.RugNotFoundException
 import com.atomist.rug.runtime.{CommandHandler, EventHandler}
 import com.atomist.rug.runtime.js.RugContext
+import com.atomist.rug.spi.Handlers.Plan
 import com.atomist.rug.test.gherkin.{Definitions, ScenarioWorld}
 
 class HandlerScenarioWorld(definitions: Definitions, rugContext: RugContext, rugs: Option[Rugs] = None)
   extends ScenarioWorld(definitions, rugs) {
+
+  private var planOption: Option[Plan] = None
 
   /**
     * Return the editor with the given name or throw an exception
@@ -37,7 +40,8 @@ class HandlerScenarioWorld(definitions: Definitions, rugContext: RugContext, rug
   }
 
   def invokeHandler(handler: CommandHandler, params: Any): Unit = {
-    val resultAs = handler.handle(rugContext, parameters(params))
+    planOption = handler.handle(rugContext, parameters(params))
   }
+
 
 }
