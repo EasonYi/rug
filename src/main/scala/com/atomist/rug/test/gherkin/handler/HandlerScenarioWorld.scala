@@ -41,14 +41,16 @@ class HandlerScenarioWorld(definitions: Definitions, rugContext: RugContext, rug
 
   def invokeHandler(handler: CommandHandler, params: Any): Unit = {
     planOption = handler.handle(rugContext, parameters(params))
+    println(s"Recorded plan option $planOption")
   }
 
   /**
     * Return the plan or throw an exception if none was recorded
     */
-  def plan: jsPlan =
+  def plan: jsPlan = {
+    println(s"Contents of recorded plan: $planOption")
     planOption.map(new jsPlan(_)).getOrElse(throw new IllegalArgumentException("No plan was recorded"))
-
+  }
 
 }
 

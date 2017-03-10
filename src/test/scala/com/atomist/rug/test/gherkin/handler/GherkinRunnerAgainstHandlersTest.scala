@@ -14,7 +14,7 @@ class GherkinRunnerAgainstHandlersTest extends FlatSpec with Matchers {
 
   val atomistConfig: AtomistConfig = DefaultAtomistConfig
 
-  "handler testing" should "perform simple steps" in {
+  "handler testing" should "verify no plan steps" in {
     val passingFeature1Steps =
       """
         |import {Given,When,Then, HandlerScenarioWorld} from "@atomist/rug/test/handler/Core"
@@ -26,6 +26,9 @@ class GherkinRunnerAgainstHandlersTest extends FlatSpec with Matchers {
         |   let handler = world.commandHandler("ReturnsEmptyPlanCommandHandler")
         |   world.invokeHandler(handler, {})
         |})
+        |Then("excitement ensues", (p,world) => {
+        |    return world.plan().messages().length == 0
+        |})
       """.stripMargin
     val passingFeature1StepsFile = StringFileArtifact(
       ".atomist/test/handler/PassingFeature1Step.ts",
@@ -33,7 +36,45 @@ class GherkinRunnerAgainstHandlersTest extends FlatSpec with Matchers {
     )
 
     val handlerName = "ReturnsEmptyPlanCommandHandler.ts"
-    val handlerFile = requiredFileInPackage(this, handlerName).withPath(atomistConfig.handlersRoot + "/" + handlerName)
+    val handlerFile = requiredFileInPackage(this, "CommandHandlers.ts").withPath(atomistConfig.handlersRoot + "/" + handlerName)
+    val as = SimpleFileBasedArtifactSource(Feature1File, passingFeature1StepsFile, handlerFile)
+
+    println(ArtifactSourceUtils.prettyListFiles(as))
+
+    val cas = TypeScriptBuilder.compileWithModel(as)
+    val grt = new GherkinRunner(new JavaScriptContext(cas), Some(RugArchiveReader.find(cas)))
+    val run = grt.execute()
+    //println(new TestReport(run))
+    run.result match {
+      case Passed =>
+      case wtf => fail(s"Unexpected: $wtf")
+    }
+  }
+
+  it should "verify single returned message" in {
+    val passingFeature1Steps =
+      """
+        |import {Given,When,Then, HandlerScenarioWorld} from "@atomist/rug/test/handler/Core"
+        |
+        |Given("a sleepy country", f => {
+        | console.log("Given invoked for handler")
+        |})
+        |When("a visionary leader enters", (rugContext, world) => {
+        |   let handler = world.commandHandler("ReturnsOneMessageCommandHandler")
+        |   world.invokeHandler(handler, {})
+        |})
+        |Then("excitement ensues", (p,world) => {
+        |   console.log("The plan message were " + world.plan().messages())
+        |    return world.plan().messages().length == 1
+        |})
+      """.stripMargin
+    val passingFeature1StepsFile = StringFileArtifact(
+      ".atomist/test/handler/PassingFeature1Step.ts",
+      passingFeature1Steps
+    )
+
+    val handlerName = "ReturnsOneMessageCommandHandler.ts"
+    val handlerFile = requiredFileInPackage(this, "CommandHandlers.ts").withPath(atomistConfig.handlersRoot + "/" + handlerName)
     val as = SimpleFileBasedArtifactSource(Feature1File, passingFeature1StepsFile, handlerFile)
 
     println(ArtifactSourceUtils.prettyListFiles(as))

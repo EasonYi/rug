@@ -14,7 +14,7 @@ object HandlerTestTargets {
       |Scenario: Australian politics, 1972-1991
       | Given a sleepy country
       | When a visionary leader enters
-      | Then plan has no messages
+      | Then excitement ensues
     """.stripMargin
 
   val Feature1File = StringFileArtifact(
